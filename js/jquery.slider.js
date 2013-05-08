@@ -1,30 +1,32 @@
 /**
  * jquery.slider - Slider ui control in jQuery
- * 
+ *
  * Written by
  * Egor Khmelev (hmelyoff@gmail.com)
+ * Ernesto Reinaldo Barreiro (reiern70@gmail.com)
  *
  * Licensed under the MIT (MIT-LICENSE.txt).
  *
  * @author Egor Khmelev
- * @version 1.1.0-RELEASE ($Id$)
- * 
+ * @author Ernesto Reinaldo Barreiro
+ * @version 1.2.0-RELEASE ($Id$)
+ *
  * Dependencies
- * 
+ *
  * jQuery (http://jquery.com)
  * jquery.numberformatter (http://code.google.com/p/jquery-numberformatter/)
  * tmpl (http://ejohn.org/blog/javascript-micro-templating/)
  * jquery.dependClass
  * draggable
- * 
+ *
  **/
 
 (function( $ ) {
-  
+
   function isArray( value ){
     if( typeof value == "undefined" ) return false;
-    
-    if (value instanceof Array || (!(value instanceof Object) &&
+
+    if(value instanceof Array || (!(value instanceof Object) &&
          (Object.prototype.toString.call((value)) == '[object Array]') ||
          typeof value.length == 'number' &&
          typeof value.splice != 'undefined' &&
@@ -33,7 +35,7 @@
         )) {
       return true;
     }
-    
+
     return false;
   }
 
@@ -41,13 +43,13 @@
 	  var jNode = $(node);
 	  if( !jNode.data( "jslider" ) )
 	    jNode.data( "jslider", new jSlider( node, settings ) );
-	  
+
 	  return jNode.data( "jslider" );
 	};
-	
+
 	$.fn.slider = function( action, opt_value ){
 	  var returnValue, args = arguments;
-	  
+
 	  function isDef( val ){
 	    return val !== undefined;
 	  };
@@ -55,10 +57,10 @@
 	  function isDefAndNotNull( val ){
       return val != null;
 	  };
-	  
+
 		this.each(function(){
 		  var self = $.slider( this, action );
-		  
+
 		  // do actions
 		  if( typeof action == "string" ){
 		    switch( action ){
@@ -69,13 +71,13 @@
 		            pointers[0].set( args[ 1 ] );
 		            pointers[0].setIndexOver();
 		          }
-		          
+
 		          if( isDefAndNotNull( pointers[1] ) && isDefAndNotNull( args[2] ) ){
 		            pointers[1].set( args[ 2 ] );
 		            pointers[1].setIndexOver();
 		          }
 		        }
-		        
+
 		        else if( isDef( args[ 1 ] ) ){
 		          var pointers = self.getPointers();
 		          if( isDefAndNotNull( pointers[0] ) && isDefAndNotNull( args[1] ) ){
@@ -83,7 +85,7 @@
 		            pointers[0].setIndexOver();
 		          }
 		        }
-		        
+
 		        else
   		        returnValue = self.getValue();
 
@@ -122,17 +124,17 @@
   		      for (var i=0; i < value.length; i++) {
   		        returnValue += (i > 0 ? ";" : "") + self.nice( value[i] );
   		      };
-  		      
+
   		      break;
-  		      
+
   		    case "skin":
 		        self.setSkin( args[1] );
 
   		      break;
 		    };
-		  
+
 		  }
-		  
+
 		  // return actual object
 		  else if( !action && !opt_value ){
 		    if( !isArray( returnValue ) )
@@ -141,14 +143,14 @@
 		    returnValue.push( self );
 		  }
 		});
-		
+
 		// flatten array just with one slider
 		if( isArray( returnValue ) && returnValue.length == 1 )
 		  returnValue = returnValue[ 0 ];
-		
+
 		return returnValue || this;
 	};
-  
+
   var OPTIONS = {
 
     settings: {
@@ -162,7 +164,7 @@
       value: "5;7",
       dimension: ""
     },
-    
+
     className: "jslider",
     selector: ".jslider-",
 
@@ -176,19 +178,19 @@
 
           '<div class="<%=className%>-pointer"></div>' +
           '<div class="<%=className%>-pointer <%=className%>-pointer-to"></div>' +
-        
+
           '<div class="<%=className%>-label"><span><%=settings.from%></span></div>' +
           '<div class="<%=className%>-label <%=className%>-label-to"><span><%=settings.to%></span><%=settings.dimension%></div>' +
 
           '<div class="<%=className%>-value"><span></span><%=settings.dimension%></div>' +
           '<div class="<%=className%>-value <%=className%>-value-to"><span></span><%=settings.dimension%></div>' +
-          
+
           '<div class="<%=className%>-scale"><%=scale%></div>'+
 
         '</td></tr></table>' +
       '</span>'
     )
-    
+
   };
 
   function jSlider(){
@@ -197,13 +199,13 @@
 
   jSlider.prototype.init = function( node, settings ){
     this.settings = $.extend(true, {}, OPTIONS.settings, settings ? settings : {});
-    
+
     // obj.sliderHandler = this;
     this.inputNode = $( node ).hide();
-    						
+
 		this.settings.interval = this.settings.to-this.settings.from;
 		this.settings.value = this.inputNode.attr("value");
-		
+
 		if( this.settings.calculate && $.isFunction( this.settings.calculate ) )
 		  this.nice = this.settings.calculate;
 
@@ -217,14 +219,14 @@
 
     this.create();
   };
-  
+
   jSlider.prototype.onstatechange = function(){
-    
+
   };
-  
+
   jSlider.prototype.create = function(){
     var $this = this;
-    
+
     this.domNode = $( OPTIONS.template({
       className: OPTIONS.className,
       settings: {
@@ -234,10 +236,10 @@
       },
       scale: this.generateScale()
     }) );
-    
+
     this.inputNode.after( this.domNode );
     this.drawScale();
-    
+
     // set skin class
     if( this.settings.skin && this.settings.skin.length > 0 )
       this.setSkin( this.settings.skin );
@@ -272,7 +274,7 @@
       value: this.o.labels[1].o.find("span")
     });
 
-    
+
     if( !$this.settings.value.split(";")[1] ){
       this.settings.single = true;
       this.domNode.addDependClass("single");
@@ -281,28 +283,35 @@
     if( !$this.settings.limits )
       this.domNode.addDependClass("limitless");
 
+    $this.handles = [];
     this.domNode.find(OPTIONS.selector + "pointer").each(function( i ){
       var value = $this.settings.value.split(";")[i];
       if( value ){
         $this.o.pointers[i] = new jSliderPointer( this, i, $this );
+
+        $this.handles[i] = $(this);
 
         var prev = $this.settings.value.split(";")[i-1];
         if( prev && new Number(value) < new Number(prev) ) value = prev;
 
         value = value < $this.settings.from ? $this.settings.from : value;
         value = value > $this.settings.to ? $this.settings.to : value;
-      
+
         $this.o.pointers[i].set( value, true );
       }
     });
-    
+
     this.o.value = this.domNode.find(".v");
+    if($this.o.pointers[1]) {
+    	this.o.valueDrag = new jSliderValue( this.o.value, $this, $this.o.pointers[0], $this.o.pointers[1] );
+    }
+
     this.is.init = true;
-    
+
     $.each(this.o.pointers, function(i){
       $this.redraw(this);
     });
-    
+
     (function(self){
       $(window).resize(function(){
         self.onresize();
@@ -310,24 +319,24 @@
     })(this);
 
   };
-  
+
   jSlider.prototype.setSkin = function( skin ){
     if( this.skin_ )
       this.domNode.removeDependClass( this.skin_, "_" );
 
     this.domNode.addDependClass( this.skin_ = skin, "_" );
   };
-  
+
   jSlider.prototype.setPointersIndex = function( i ){
     $.each(this.getPointers(), function(i){
       this.index( i );
     });
   };
-  
+
   jSlider.prototype.getPointers = function(){
     return this.o.pointers;
   };
-  
+
   jSlider.prototype.generateScale = function(){
     if( this.settings.scale && this.settings.scale.length > 0 ){
       var str = "";
@@ -341,13 +350,13 @@
 
     return "";
   };
-  
+
   jSlider.prototype.drawScale = function(){
     this.domNode.find(OPTIONS.selector + "scale span ins").each(function(){
       $(this).css({ marginLeft: -$(this).outerWidth()/2 });
     });
   };
-  
+
   jSlider.prototype.onresize = function(){
     var self = this;
 		this.sizes = {
@@ -359,35 +368,50 @@
       self.redraw(this);
     });
   };
-  
+
   jSlider.prototype.update = function(){
     this.onresize();
     this.drawScale();
   };
-  
+
   jSlider.prototype.limits = function( x, pointer ){
 	  // smooth
 	  if( !this.settings.smooth ){
 	    var step = this.settings.step*100 / ( this.settings.interval );
 	    x = Math.round( x/step ) * step;
 	  }
-	  
+
 	  var another = this.o.pointers[1-pointer.uid];
 	  if( another && pointer.uid && x < another.value.prc ) x = another.value.prc;
 	  if( another && !pointer.uid && x > another.value.prc ) x = another.value.prc;
 
-    // base limit
+	  // base limit
 	  if( x < 0 ) x = 0;
 	  if( x > 100 ) x = 100;
-	  
+
     return Math.round( x*10 ) / 10;
   };
-  
+
+  jSlider.prototype.limitsBoth = function( x, width ){
+	  // smooth
+	  if( !this.settings.smooth ){
+	    var step = this.settings.step*100 / ( this.settings.interval );
+	    x = Math.round( x/step ) * step;
+	  }
+
+	  var xwidth = ((width/this.domNode.width())*100);
+	  // base limit
+	  if( x < 0 ) x = 0;
+	  if( x + xwidth > 100 ) { x = 100 - xwidth };
+
+    return Math.round( x*10 ) / 10;
+  };
+
   jSlider.prototype.redraw = function( pointer ){
     if( !this.is.init ) return false;
-    
+
     this.setValue();
-    
+
     // redraw range line
     if( this.o.pointers[0] && this.o.pointers[1] )
       this.o.value.css({ left: this.o.pointers[0].value.prc + "%", width: ( this.o.pointers[1].value.prc - this.o.pointers[0].value.prc ) + "%" });
@@ -397,12 +421,35 @@
         pointer.value.origin
       )
     );
-    
+
     // redraw position of labels
     this.redrawLabels( pointer );
+  };
+
+  jSlider.prototype.redrawBoth = function( middleBar , width){
+	    if( !this.is.init ) {
+	    	return false;
+	    }
+
+	    this.setValue();
+
+	    this.o.pointers[0].value.prc = middleBar.value.prc;
+	    this.o.pointers[0].value.origin =  this.prcToValue(this.o.pointers[0].value.prc);
+	    this.o.pointers[1].value.prc = (middleBar.value.prc + ((width/this.domNode.width())*100));
+	    this.o.pointers[1].value.origin =  this.prcToValue(this.o.pointers[1].value.prc);
+
+	    this.handles[0].css({left: middleBar.value.prc + "%"});
+	    this.handles[1].css({left: this.o.pointers[1].value.prc + "%"});
+
+	    this.o.labels[middleBar.pointer1.uid].value.html( this.nice( this.o.pointers[0].value.origin ) );
+	    this.redrawLabels( middleBar.pointer1 );
+
+	    this.o.labels[middleBar.pointer2.uid].value.html( this.nice( this.o.pointers[1].value.origin ) );
+	    // redraw position of labels
+	    this.redrawLabels( middleBar.pointer2 );
 
   };
-  
+
   jSlider.prototype.redrawLabels = function( pointer ){
 
     function setPosition( label, sizes, prc ){
@@ -419,7 +466,7 @@
         sizes.right = true;
       } else
         sizes.right = false;
-        
+
       label.o.css({ left: prc + "%", marginLeft: sizes.margin, right: "auto" });
       if( sizes.right ) label.o.css({ left: "auto", right: 0 });
       return sizes;
@@ -480,7 +527,7 @@
     }
 
     sizes = setPosition( label, sizes, prc );
-    
+
     /* draw second label */
     if( another_label ){
       var sizes = {
@@ -490,10 +537,10 @@
   	  };
       sizes = setPosition( another_label, sizes, another.value.prc );
     }
-	  
+
     this.redrawLimits();
   };
-  
+
   jSlider.prototype.redrawLimits = function(){
 	  if( this.settings.limits ){
 
@@ -502,7 +549,7 @@
       for( key in this.o.pointers ){
 
         if( !this.settings.single || key == 0 ){
-        
+
       	  var pointer = this.o.pointers[key];
           var label = this.o.labels[pointer.uid];
           var label_left = label.o.offset().left - this.sizes.domOffset.left;
@@ -527,7 +574,7 @@
 
 	  }
   };
-  
+
   jSlider.prototype.setValue = function(){
     var value = this.getValue();
     this.inputNode.attr( "value", value );
@@ -537,7 +584,7 @@
   jSlider.prototype.getValue = function(){
     if(!this.is.init) return false;
     var $this = this;
-    
+
     var value = "";
     $.each( this.o.pointers, function(i){
       if( this.value.prc != undefined && !isNaN(this.value.prc) ) value += (i > 0 ? ";" : "") + $this.prcToValue( this.value.prc );
@@ -548,45 +595,44 @@
   jSlider.prototype.getPrcValue = function(){
     if(!this.is.init) return false;
     var $this = this;
-    
+
     var value = "";
     $.each( this.o.pointers, function(i){
       if( this.value.prc != undefined && !isNaN(this.value.prc) ) value += (i > 0 ? ";" : "") + this.value.prc;
     });
     return value;
   };
-  
+
   jSlider.prototype.prcToValue = function( prc ){
 
 	  if( this.settings.heterogeneity && this.settings.heterogeneity.length > 0 ){
-  	  var h = this.settings.heterogeneity;
+		  var h = this.settings.heterogeneity;
 
-  	  var _start = 0;
-  	  var _from = this.settings.from;
+		  var _start = 0;
+		  var _from = this.settings.from;
 
-  	  for( var i=0; i <= h.length; i++ ){
-  	    if( h[i] ) var v = h[i].split("/");
-  	    else       var v = [100, this.settings.to];
-  	    
-  	    v[0] = new Number(v[0]);
-  	    v[1] = new Number(v[1]);
-  	      
-  	    if( prc >= _start && prc <= v[0] ) {
-  	      var value = _from + ( (prc-_start) * (v[1]-_from) ) / (v[0]-_start);
-  	    }
+		  for( var i=0; i <= h.length; i++ ){
+			  if( h[i] ) { var v = h[i].split("/"); }
+			  else       { var v = [100, this.settings.to]; }
 
-  	    _start = v[0];
-  	    _from = v[1];
-  	  };
+			  v[0] = new Number(v[0]);
+			  v[1] = new Number(v[1]);
 
+			  if( prc >= _start && prc <= v[0] ) {
+				  var value = _from + ( (prc-_start) * (v[1]-_from) ) / (v[0]-_start);
+			  }
+
+			  _start = v[0];
+			  _from = v[1];
+		  };
 	  } else {
-      var value = this.settings.from + ( prc * this.settings.interval ) / 100;
+		  var value = this.settings.from + ( prc * this.settings.interval ) / 100;
 	  }
 
-    return this.round( value );
+	  return this.round( value );
   };
-  
-	jSlider.prototype.valueToPrc = function( value, pointer ){  	  
+
+  jSlider.prototype.valueToPrc = function( value, pointer ){
 	  if( this.settings.heterogeneity && this.settings.heterogeneity.length > 0 ){
   	  var h = this.settings.heterogeneity;
 
@@ -597,7 +643,7 @@
   	    if(h[i]) var v = h[i].split("/");
   	    else     var v = [100, this.settings.to];
   	    v[0] = new Number(v[0]); v[1] = new Number(v[1]);
-  	      
+
   	    if(value >= _from && value <= v[1]){
   	      var prc = pointer.limits(_start + (value-_from)*(v[0]-_start)/(v[1]-_from));
   	    }
@@ -610,40 +656,95 @@
 	  }
 
 	  return prc;
-	};
-  
-	jSlider.prototype.round = function( value ){
-    value = Math.round( value / this.settings.step ) * this.settings.step;
-		if( this.settings.round ) value = Math.round( value * Math.pow(10, this.settings.round) ) / Math.pow(10, this.settings.round);
-		else value = Math.round( value );
-		return value;
-	};
-	
-	jSlider.prototype.nice = function( value ){
-		value = value.toString().replace(/,/gi, ".").replace(/ /gi, "");;
+  };
 
-		if( $.formatNumber ){
+  jSlider.prototype.round = function( value ){
+	  value = Math.round( value / this.settings.step ) * this.settings.step;
+	  if( this.settings.round ) {
+		  value = Math.round( value * Math.pow(10, this.settings.round) ) / Math.pow(10, this.settings.round);
+	  } else {
+		  value = Math.round( value );
+	  }
+	  return value;
+  };
+
+  jSlider.prototype.nice = function( value ){
+	  value = value.toString().replace(/,/gi, ".").replace(/ /gi, "");;
+	  if( $.formatNumber ){
 		  return $.formatNumber( new Number(value), this.settings.format || {} ).replace( /-/gi, "&minus;" );
-		}
-		  
-		else {
+	  } else {
 		  return new Number(value);
-		}
-	};
+	  }
+  };
 
-  
+
+  function jSliderValue(){
+		Draggable.apply( this, arguments );
+  }
+  jSliderValue.prototype = new Draggable();
+
+  jSliderValue.prototype.oninit = function( ptr, _constructor, pointer1, pointer2 ){
+	  this.parent = _constructor;
+	  this.value = {};
+	  this.pointer1 = pointer1;
+	  this.pointer2 = pointer2;
+	  this.settings = this.parent.settings;
+  };
+
+  jSliderValue.prototype.onmousedown = function(evt){
+	  this._parent = {
+			  offset: this.parent.domNode.offset(),
+			  width: this.parent.domNode.width()
+	  };
+	  var coords = this._getPageCoords( evt );
+	  this.shift = coords.x - parseInt( this.ptr.offset().left );
+	  this.ptr.addDependClass("hover");
+	  this.width = parseInt( this.ptr.css("width") );
+  };
+
+  jSliderValue.prototype.onmousemove = function( evt, x ){
+	  var coords = this._getPageCoords( evt );
+	  this._set( this.calc( coords.x ) );
+  };
+
+  jSliderValue.prototype.onmouseup = function( evt ){
+	  if( this.parent.settings.callback && $.isFunction(this.parent.settings.callback) ) {
+		  this.parent.settings.callback.call( this.parent, this.parent.getValue() );
+	  }
+	  this.ptr.removeDependClass("hover");
+  };
+
+  jSliderValue.prototype._set = function( prc, opt_origin ){
+	  if( !opt_origin ) {
+		  this.value.origin = this.parent.prcToValue(prc);
+	  }
+
+	  this.value.prc = prc;
+	  this.ptr.css({ left: prc + "%" });
+	  this.parent.redrawBoth(this, this.width);
+  };
+
+  jSliderValue.prototype.calc = function(coords){
+	  var x = this.limits(((coords-this._parent.offset.left-this.shift)*100)/this._parent.width);
+	  return x;
+  };
+
+  jSliderValue.prototype.limits = function( x ){
+	  return this.parent.limitsBoth( x , this.width );
+  };
+
   function jSliderPointer(){
   	Draggable.apply( this, arguments );
   }
   jSliderPointer.prototype = new Draggable();
-  
+
   jSliderPointer.prototype.oninit = function( ptr, id, _constructor ){
     this.uid = id;
     this.parent = _constructor;
     this.value = {};
     this.settings = this.parent.settings;
   };
-  
+
   jSliderPointer.prototype.onmousedown = function(evt){
 	  this._parent = {
 	    offset: this.parent.domNode.offset(),
@@ -651,33 +752,33 @@
 	  };
 	  this.ptr.addDependClass("hover");
 	  this.setIndexOver();
-	};
+  };
 
 	jSliderPointer.prototype.onmousemove = function( evt, x ){
 	  var coords = this._getPageCoords( evt );
 	  this._set( this.calc( coords.x ) );
 	};
-	
+
 	jSliderPointer.prototype.onmouseup = function( evt ){
 	  if( this.parent.settings.callback && $.isFunction(this.parent.settings.callback) )
 	    this.parent.settings.callback.call( this.parent, this.parent.getValue() );
-	    
+
 	  this.ptr.removeDependClass("hover");
 	};
-	
+
 	jSliderPointer.prototype.setIndexOver = function(){
 	  this.parent.setPointersIndex( 1 );
 	  this.index( 2 );
 	};
-	
+
 	jSliderPointer.prototype.index = function( i ){
 	  this.ptr.css({ zIndex: i });
 	};
-	
+
 	jSliderPointer.prototype.limits = function( x ){
 	  return this.parent.limits( x, this );
 	};
-	
+
 	jSliderPointer.prototype.calc = function(coords){
 	  var x = this.limits(((coords-this._parent.offset.left)*100)/this._parent.width);
 	  return x;
@@ -687,7 +788,7 @@
 	  this.value.origin = this.parent.round(value);
 	  this._set( this.parent.valueToPrc( value, this ), opt_origin );
 	};
-	
+
 	jSliderPointer.prototype._set = function( prc, opt_origin ){
 	  if( !opt_origin )
 	    this.value.origin = this.parent.prcToValue(prc);
@@ -696,5 +797,5 @@
 		this.ptr.css({ left: prc + "%" });
 	  this.parent.redraw(this);
 	};
-  
+
 })(jQuery);
