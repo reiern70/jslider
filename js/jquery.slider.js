@@ -162,7 +162,8 @@
       round: 0,
       format: { format: "#,##0.##" },
       value: "5;7",
-      dimension: ""
+      dimension: "",
+      draggable: false
     },
 
     className: "jslider",
@@ -173,7 +174,7 @@
         '<table><tr><td>' +
           '<div class="<%=className%>-bg">' +
             '<i class="l"></i><i class="f"></i><i class="r"></i>' +
-            '<i class="v"></i>' +
+            '<i class="v <%=settings.draggable%>"></i>' +
           '</div>' +
 
           '<div class="<%=className%>-pointer"></div>' +
@@ -232,7 +233,8 @@
       settings: {
         from: this.nice( this.settings.from ),
         to: this.nice( this.settings.to ),
-        dimension: this.settings.dimension
+        dimension: this.settings.dimension,
+        draggable: this.settings.draggable? "drag": ""
       },
       scale: this.generateScale()
     }) );
@@ -302,7 +304,7 @@
     });
 
     this.o.value = this.domNode.find(".v");
-    if($this.o.pointers[1]) {
+    if( $this.o.pointers[1] && this.settings.draggable ) {
     	this.o.valueDrag = new jSliderValue( this.o.value, $this, $this.o.pointers[0], $this.o.pointers[1] );
     }
 
