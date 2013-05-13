@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>jSlider</title>
-	
+
 	<!-- bin/jquery.slider.min.css -->
 	<link rel="stylesheet" href="css/jslider.css" type="text/css">
 	<link rel="stylesheet" href="css/jslider.blue.css" type="text/css">
@@ -13,7 +13,7 @@
   <!-- end -->
 
 	<script type="text/javascript" src="js/jquery-1.7.1.js"></script>
-	
+
 	<!-- bin/jquery.slider.min.js -->
 	<script type="text/javascript" src="js/jshashtable-2.1_src.js"></script>
 	<script type="text/javascript" src="js/jquery.numberformatter-1.2.3.js"></script>
@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="js/draggable-0.1.js"></script>
 	<script type="text/javascript" src="js/jquery.slider.js"></script>
   <!-- end -->
-	
+
 	<style type="text/css" media="screen">
 	  body { background: #EEF0F7; }
 	 .layout { padding: 50px; font-family: Georgia, serif; }
@@ -33,7 +33,7 @@
 
 </head>
 <body>
-  
+
   <div class="layout">
 
     <div class="layout-slider" style="width: 100%">
@@ -120,6 +120,7 @@
   to: 1020,
   step: 15,
   dimension: '',
+  draggable: true,
   scale: ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
   limits: false,
   calculate: function( value ){
@@ -136,17 +137,16 @@
       <input id="Slider5" type="slider" name="area" value="600;720" />
     </div>
     <script type="text/javascript" charset="utf-8">
-      
-      jQuery("#Slider5").slider({ from: 480, to: 1020, step: 15, dimension: '', scale: ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'], limits: false, calculate: function( value ){
+
+      jQuery("#Slider5").slider({ from: 480, to: 1020, step: 15, dimension: '', draggable: true, scale: ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'], limits: false, calculate: function( value ){
         var hours = Math.floor( value / 60 );
         var mins = ( value - hours*60 );
         return (hours < 10 ? "0"+hours : hours) + ":" + ( mins == 0 ? "00" : mins );
       }})
 
     </script>
-    
+
   </div>
 
-    
 </body>
 </html>
